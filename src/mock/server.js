@@ -18,44 +18,56 @@ app.use((req, res, next) => {
   next();
 });
 
-// メモデータのモック
-let memos = [
-  {
-    id: 1,
-    title: 'サンプルメモ1',
-    content: 'これはサンプルメモの内容です。',
-    category: '仕事',
-    createdAt: '2024-03-20T10:00:00Z',
-    updatedAt: '2024-03-20T10:00:00Z'
-  },
-  {
-    id: 2,
-    title: 'サンプルメモ2',
-    content: 'もう一つのサンプルメモです。',
-    category: 'プライベート',
-    createdAt: '2024-03-20T11:00:00Z',
-    updatedAt: '2024-03-20T11:00:00Z'
-  }
-];
+// 初期データの定義
+const getInitialData = () => ({
+  memos: [
+    {
+      id: 1,
+      title: 'サンプルメモ1',
+      content: 'これはサンプルメモの内容です。',
+      category: '仕事',
+      createdAt: '2024-03-20T10:00:00Z',
+      updatedAt: '2024-03-20T10:00:00Z'
+    },
+    {
+      id: 2,
+      title: 'サンプルメモ2',
+      content: 'もう一つのサンプルメモです。',
+      category: 'プライベート',
+      createdAt: '2024-03-20T11:00:00Z',
+      updatedAt: '2024-03-20T11:00:00Z'
+    }
+  ],
+  categories: [
+    {
+      id: 1,
+      name: '仕事',
+      color: 'blue'
+    },
+    {
+      id: 2,
+      name: 'プライベート',
+      color: 'green'
+    },
+    {
+      id: 3,
+      name: '買い物',
+      color: 'orange'
+    }
+  ]
+});
 
-// カテゴリーデータのモック
-let categories = [
-  {
-    id: 1,
-    name: '仕事',
-    color: 'blue'
-  },
-  {
-    id: 2,
-    name: 'プライベート',
-    color: 'green'
-  },
-  {
-    id: 3,
-    name: '買い物',
-    color: 'orange'
-  }
-];
+// データの初期化
+let { memos, categories } = getInitialData();
+
+// リセット用のエンドポイント
+app.post('/api/reset', (req, res) => {
+  const initialData = getInitialData();
+  memos = initialData.memos;
+  categories = initialData.categories;
+  console.log('データをリセットしました');
+  res.json({ message: 'データをリセットしました', data: initialData });
+});
 
 // メモ関連のエンドポイント
 app.get('/api/memos', (req, res) => {
