@@ -1,6 +1,9 @@
 import axios from 'axios'
 import store from '../store'
 
+// ベースURLの設定
+axios.defaults.baseURL = 'http://localhost:3000'
+
 // リクエストインターセプター
 axios.interceptors.request.use(
   config => {
