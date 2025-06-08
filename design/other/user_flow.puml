@@ -1,0 +1,185 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam handwritten false
+skinparam defaultFontName "Noto Sans JP"
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ArrowThickness 1
+skinparam roundCorner 10
+skinparam shadowing false
+
+title メモアプリ 全体フロー
+
+start
+:ユーザーアクセス;
+
+if (ログイン済み?) then (yes)
+  :メモ一覧画面;
+else (no)
+  :ログイン画面;
+  if (新規登録?) then (yes)
+    :新規登録画面;
+    if (登録成功?) then (yes)
+      :メモ一覧画面;
+    else (no)
+      :エラー表示;
+      backward:再入力;
+    endif
+  else (no)
+    if (パスワードリセット?) then (yes)
+      :パスワードリセット画面;
+      backward:ログイン画面;
+    else (no)
+      if (ログイン成功?) then (yes)
+        :メモ一覧画面;
+      else (no)
+        :エラー表示;
+        backward:再入力;
+      endif
+    endif
+  endif
+endif
+
+:メモ一覧画面;
+
+repeat
+  switch (操作選択)
+  case (メモ作成)
+    :メモ作成画面;
+    if (保存?) then (yes)
+      :メモ一覧画面;
+    else (no)
+      backward:編集継続;
+    endif
+  case (メモ編集)
+    :メモ詳細画面;
+    :メモ編集画面;
+    if (保存?) then (yes)
+      :メモ一覧画面;
+    else (no)
+      backward:編集継続;
+    endif
+  case (メモ削除)
+    :メモ詳細画面;
+    if (削除確認?) then (yes)
+      :メモ一覧画面;
+    else (no)
+      backward:詳細画面;
+    endif
+  case (カテゴリ管理)
+    :カテゴリ管理画面;
+    if (操作完了?) then (yes)
+      :メモ一覧画面;
+    else (no)
+      backward:管理継続;
+    endif
+  endswitch
+repeat while (アプリケーション使用中?) is (yes) not (no)
+
+stop
+@enduml
+
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam handwritten false
+skinparam defaultFontName "Noto Sans JP"
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ArrowThickness 1
+skinparam roundCorner 10
+skinparam shadowing false
+
+title メモ操作フロー
+
+start
+:メモ一覧画面;
+
+repeat
+  switch (操作選択)
+  case (メモ作成)
+    :メモ作成画面;
+    :タイトル入力;
+    :カテゴリ選択;
+    :本文入力;
+    if (プレビュー?) then (yes)
+      :プレビュー表示;
+      backward:編集画面;
+    else (no)
+      if (保存?) then (yes)
+        :メモ一覧画面;
+      else (no)
+        backward:編集継続;
+      endif
+    endif
+  case (メモ検索)
+    :検索条件入力;
+    :検索実行;
+    :検索結果表示;
+    if (詳細表示?) then (yes)
+      :メモ詳細画面;
+    else (no)
+      backward:検索結果;
+    endif
+  case (メモ編集)
+    :メモ詳細画面;
+    :メモ編集画面;
+    :内容編集;
+    if (保存?) then (yes)
+      :メモ一覧画面;
+    else (no)
+      backward:編集継続;
+    endif
+  endswitch
+repeat while (メモ操作中?) is (yes) not (no)
+
+stop
+@enduml
+
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam handwritten false
+skinparam defaultFontName "Noto Sans JP"
+skinparam defaultFontSize 14
+skinparam ArrowColor black
+skinparam ArrowThickness 1
+skinparam roundCorner 10
+skinparam shadowing false
+
+title カテゴリ管理フロー
+
+start
+:カテゴリ管理画面;
+
+repeat
+  switch (操作選択)
+  case (カテゴリ作成)
+    :新規カテゴリ作成;
+    :カテゴリ名入力;
+    if (保存?) then (yes)
+      :カテゴリ一覧更新;
+    else (no)
+      backward:入力継続;
+    endif
+  case (カテゴリ編集)
+    :カテゴリ選択;
+    :カテゴリ名編集;
+    if (保存?) then (yes)
+      :カテゴリ一覧更新;
+    else (no)
+      backward:編集継続;
+    endif
+  case (カテゴリ削除)
+    :カテゴリ選択;
+    if (削除確認?) then (yes)
+      :カテゴリ一覧更新;
+    else (no)
+      backward:選択画面;
+    endif
+  endswitch
+repeat while (カテゴリ操作中?) is (yes) not (no)
+
+stop
+@enduml 
