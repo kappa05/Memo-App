@@ -160,7 +160,7 @@ export default {
 
     const loading = ref(true)
     const error = ref(null)
-    const memos = ref([])
+    const memos = computed(() => store.getters['memo/allMemos'])
     const categories = ref([])
 
     const filteredMemos = computed(() => {
@@ -226,8 +226,7 @@ export default {
     const fetchMemos = async () => {
       try {
         loading.value = true
-        const response = await store.dispatch('memo/fetchMemos')
-        memos.value = response
+        await store.dispatch('memo/fetchMemos')
       } catch (err) {
         error.value = err.message
       } finally {
